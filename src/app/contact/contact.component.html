@@ -1,21 +1,25 @@
-<h1>Contact Form</h1>
-<form>
+<h1 [(ngModel)]='width'>Contact Form {{width}} </h1>
+<form #form='ngForm' (ngSubmit)='onSubmit(form)'>
   <div class="form-group">
     <label for='firstname'>First Name</label>
     <input
-    required
     ngModel name="firstName"
+    #firstName = "ngModel"
+    required
+    minlength="3"
+    maxlength="15"
     type="text" id="firstName"
     class="form-control"
-    #firstName = "ngModel"
     (change)='log(firstName)'>
-    <div class="alert alert-danger"
-    *ngIf="!firstName"
-    >First Name is required</div>
+    <div class="alert alert-danger" *ngIf="firstName.touched && !firstName.valid">
+      <div *ngIf="firstName.errors.required">First Name is required</div>
+      <div *ngIf="firstName.errors.minlength">First Name should be minumum of {{firstName.errors.minlength.requiredLength}} characters</div>
+      <div *ngIf="firstName.errors.pattern">First Name doesn't match pattern</div>
+    </div>
   </div>
   <div class="form-group">
     <label for="comment">Comment</label>
     <textarea ngModel name="comment" id="comment" cols="30" rows="10" class="form-control"></textarea>
   </div>
-  <button class="btn btn-primary">Submit</button>
+  <button class="btn btn-primary" [disabled]='!form.valid'>Submit</button>
 </form>
